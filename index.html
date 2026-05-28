@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCIS Reports | Unified Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --midnight-black: #05070a;
+            --deep-navy: #0f172a;
+            --accent-blue: #38bdf8;
+            --glass-white: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            background-color: var(--midnight-black);
+            color: #ffffff;
+        }
+
+        .bg-midnight { background-color: var(--midnight-black); }
+        .bg-navy { background-color: var(--deep-navy); }
+        .text-accent { color: var(--accent-blue); }
+        .border-glass { border-color: rgba(255, 255, 255, 0.1); }
+
+        .section { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Custom Scrollbar for the feed */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--accent-blue); }
+
+        /* Report Item Styling */
+        .report-item {
+            padding: 1.2rem;
+            background: var(--deep-navy);
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 5px solid var(--accent-blue);
+            transition: all 0.3s ease;
+        }
+        .report-item.priority-urgent { border-left-color: #ef4444; background: rgba(239, 68, 68, 0.05); }
+        .badge { font-size: 0.7rem; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; font-weight: 800; color: #0f172a; background: var(--accent-blue); }
+        .badge.urgent { background: #ef4444; color: white; }
+    </style>
+</head>
+<body class="font-sans">
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 flex items-center justify-between bg-navy px-6 py-4 border-b border-glass">
+        <div class="flex items-center gap-4">
+            <div class="bg-white p-1 rounded-md flex items-center justify-center shadow-md">
+                <img src="https://uploads.onecompiler.io/44p52pkes/44qka53qd/IMG_0040.png" alt="FCIS Logo" class="h-8 w-auto mix-blend-multiply object-contain">
+            </div>
+            <div class="text-xl font-bold tracking-tight text-white">
+                FCIS<span class="text-accent">Reports</span>
+            </div>
+        </div>
+
+        <div class="flex gap-4 md:gap-6">
+            <button onclick="nav('home')" class="nav-btn text-sm font-medium hover:text-accent transition-colors text-accent font-semibold">Submit Report</button>
+            <button onclick="nav('completed')" class="nav-btn text-sm font-medium hover:text-accent transition-colors">Completed Reports</button>
+            <button onclick="nav('about')" class="nav-btn text-sm font-medium hover:text-accent transition-colors">About Portal</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative w-full h-80 flex items-center justify-center bg-midnight border-b border-glass overflow-hidden">
+        <div 
+            class="absolute inset-0 opacity-15 bg-center bg-no-repeat"
+            style="background-image: url('https://uploads.onecompiler.io/44p52pkes/44qka53qd/IMG_0040.png'); background-size: contain;"
+        ></div>
+        
+        <div class="relative z-10 text-center px-4">
+            <h1 class="text-5xl font-extrabold text-white mb-4 tracking-tight">Campus <span class="text-accent">Guardian</span></h1>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">The central nervous system for Forest City International School safety and facility management.</p>
+        </div>
+    </section>
+
+    <main class="max-w-7xl mx-auto px-6 py-10">
+        
+        <!-- SECTION: SUBMIT REPORT -->
+        <section id="home" class="section active">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                <!-- Form -->
+                <div class="bg-navy p-8 rounded-2xl border border-glass shadow-2xl h-fit">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center gap-3"><i data-lucide="send" class="text-accent"></i> File a Report</h2>
+                    <form id="reportForm" class="space-y-4">
+                        <div>
+                            <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Reporter Name</label>
+                            <input type="text" id="reporterName" placeholder="Anonymous (Or fill your name)" class="w-full bg-midnight border border-glass rounded-lg p-3 mt-1 outline-none focus:border-accent-blue text-white transition-all">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Incident Category</label>
+                                <select id="type" class="w-full bg-midnight border border-glass rounded-lg p-3 mt-1 outline-none focus:border-accent-blue text-white">
+                                    <option>Maintenance</option>
+                                    <option>Security</option>
+                                    <option>IT Support</option>
+                                    <option>Health & Safety</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Priority</label>
+                                <select id="priority" class="w-full bg-midnight border border-glass rounded-lg p-3 mt-1 outline-none focus:border-accent-blue text-white">
+                                    <option>Normal</option>
+                                    <option>Urgent</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Location</label>
+                            <input type="text" id="loc" placeholder="e.g., Block B, Floor 2" class="w-full bg-midnight border border-glass rounded-lg p-3 mt-1 outline-none focus:border-accent-blue text-white" required>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Description</label>
+                            <textarea id="desc" rows="3" placeholder="Describe the issue..." class="w-full bg-midnight border border-glass rounded-lg p-3 mt-1 outline-none focus:border-accent-blue text-white" required></textarea>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-400 uppercase tracking-widest block mb-1">Attach Photo or File</label>
+                            <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-glass rounded-lg cursor-pointer bg-midnight hover:border-accent-blue transition-all">
+                                <div class="flex flex-col items-center justify-center pt-2 pb-3">
+                                    <i data-lucide="camera" class="text-gray-400 w-6 h-6 mb-1"></i>
+                                    <p class="text-xs text-gray-400"><span class="font-semibold text-accent">Upload asset</span> or capture photo</p>
+                                </div>
+                                <input type="file" id="fileInput" accept="image/*,application/pdf" class="hidden" onchange="previewFile()">
+                            </label>
+                            <!-- File Preview Node Container -->
+                            <div id="filePreview" class="hidden mt-2 p-2 bg-midnight/50 border border-glass rounded-lg items-center gap-2 text-xs">
+                                <i data-lucide="file-text" class="text-accent w-4 h-4"></i>
+                                <span id="fileName" class="text-gray-300 truncate flex-1">file.jpg</span>
+                                <button type="button" onclick="clearFile()" class="text-red-400 hover:text-red-500">✕</button>
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full bg-accent-blue text-navy py-4 rounded-xl font-black uppercase tracking-tighter hover:scale-[1.02] transition-transform shadow-lg shadow-sky-500/10">Dispatch Report</button>
+                    </form>
+                </div>
+
+                <!-- Feed Area -->
+                <div class="lg:col-span-2">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center gap-3"><i data-lucide="activity" class="text-accent"></i> Live Campus Feed</h2>
+                    <div id="feed" class="space-y-4 max-h-[670px] overflow-y-auto pr-4 custom-scrollbar">
+                        <!-- Initial Placeholder -->
+                        <div class="report-item" id="placeholder-item">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="badge">System</span>
+                                <span class="text-xs text-gray-500">Live Status</span>
+                            </div>
+                            <h4 class="font-bold text-lg">System Active</h4>
+                            <p class="text-gray-400 text-sm">Reports submitted via the portal will appear here in real-time. Staff and faculty can click off issues directly to resolve them.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: COMPLETED REPORTS -->
+        <section id="completed" class="section">
+            <h2 class="text-3xl font-bold mb-2">Completed <span class="text-accent">Archive</span></h2>
+            <p class="text-gray-400 mb-8 text-sm">A timestamped ledger of issues marked as resolved by school personnel.</p>
+            <div id="completedContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Fallback view when empty -->
+                <p id="emptyArchiveText" class="text-gray-500 italic col-span-full">No reports have been compiled into the completed archive yet.</p>
+            </div>
+        </section>
+
+        <!-- SECTION: ABOUT -->
+        <section id="about" class="section text-center max-w-3xl mx-auto py-10">
+            <i data-lucide="shield-check" class="w-16 h-16 text-accent mx-auto mb-6"></i>
+            <h2 class="text-4xl font-black mb-4">Official Safety Protocol</h2>
+            <p class="text-gray-400 leading-relaxed mb-6">This platform functions seamlessly as the official reporting toolkit for Forest City International School. It guarantees that campus maintenance items, digital safety events, and facility anomalies are systematically logged, organized, and cataloged directly to transparent historical timelines.</p>
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-navy border border-glass text-xs text-gray-400">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Operation Pipeline Active
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Track the current base64 file data string
+        let currentFileData = "";
+        let currentFileName = "";
+
+        // Core App Setup
+        lucide.createIcons();
+
+        // Single Page Architecture Tab Switching Logic
+        function nav(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('text-accent', 'font-semibold'));
+            
+            document.getElementById(id).classList.add('active');
+            
+            const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(btn => btn.getAttribute('onclick').includes(id));
+            if(activeBtn) activeBtn.classList.add('text-accent', 'font-semibold');
+        }
+
+        // Parse Uploaded Assets
+        function previewFile() {
+            const file = document.getElementById('fileInput').files[0];
+            if (!file) return;
+
+            currentFileName = file.name;
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                currentFileData = e.target.result;
+                document.getElementById('fileName').innerText = currentFileName;
+                document.getElementById('filePreview').style.display = 'flex';
+                lucide.createIcons();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Purge Current File Attachments
+        function clearFile() {
+            document.getElementById('fileInput').value = "";
+            currentFileData = "";
+            currentFileName = "";
+            document.getElementById('filePreview').style.display = 'none';
+        }
+
+        // Live Submission Routing Logic
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Remove initial system card if present
+            const placeholder = document.getElementById('placeholder-item');
+            if(placeholder) placeholder.remove();
+
+            const name = document.getElementById('reporterName').value.trim() || "Anonymous Student";
+            const type = document.getElementById('type').value;
+            const priority = document.getElementById('priority').value;
+            const loc = document.getElementById('loc').value;
+            const desc = document.getElementById('desc').value;
+            const feed = document.getElementById('feed');
+
+            const item = document.createElement('div');
+            item.className = `report-item ${priority === 'Urgent' ? 'priority-urgent' : ''}`;
+            
+            // Render media attachments optionally inside payload data markup strings
+            let mediaMarkup = "";
+            if (currentFileData) {
+                if (currentFileData.startsWith("data:image/")) {
+                    mediaMarkup = `<div class="mt-3 rounded-lg overflow-hidden border border-glass max-h-48"><img src="${currentFileData}" class="w-full h-full object-cover"></div>`;
+                } else {
+                    mediaMarkup = `<div class="mt-2 text-xs text-accent flex items-center gap-1"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> File: ${currentFileName}</div>`;
+                }
+            }
+
+            item.innerHTML = `
+                <div class="flex justify-between items-center mb-3">
+                    <span class="badge ${priority === 'Urgent' ? 'urgent' : ''}">${priority}</span>
+                    <span class="text-xs text-gray-500 flex items-center gap-1"><i data-lucide="user" class="w-3 h-3 text-accent"></i> ${name}</span>
+                </div>
+                <h4 class="font-bold text-lg text-white">${loc}</h4>
+                <p class="text-gray-300 text-sm mt-1"><span class="text-accent font-bold">[${type}]</span> ${desc}</p>
+                ${mediaMarkup}
+                <div class="mt-4 pt-3 border-t border-white/5 flex justify-end">
+                    <button onclick="archiveReport(this, '${type}', '${loc}', '${name}')" class="flex items-center gap-1 text-xs font-semibold text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 px-3 py-1.5 rounded-md border border-emerald-500/20 transition-all">
+                        <i data-lucide="check-square" class="w-3.5 h-3.5"></i> Mark as Complete
+                    </button>
+                </div>
+            `;
+
+            feed.prepend(item);
+            this.reset();
+            clearFile();
+            lucide.createIcons();
+        });
+
+        // Resolution Pipelines Router (Moves live feed items off to Finished sections)
+        function archiveReport(btn, type, loc, author) {
+            const reportNode = btn.closest('.report-item');
+            const container = document.getElementById('completedContainer');
+            const emptyText = document.getElementById('emptyArchiveText');
+            
+            if(emptyText) emptyText.remove();
+
+            const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            // Build out archive payload footprint card
+            const archivedCard = document.createElement('div');
+            archivedCard.className = "bg-navy p-6 rounded-xl border border-glass flex flex-col justify-between shadow-lg opacity-80 hover:opacity-100 transition-opacity";
+            archivedCard.innerHTML = `
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-[10px] font-bold text-emerald-400 uppercase border border-emerald-400/30 bg-emerald-500/5 px-2 py-0.5 rounded">Resolved</span>
+                        <small class="text-gray-500 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> Today at ${timestamp}</small>
+                    </div>
+                    <h4 class="font-bold text-white text-base">${loc}</h4>
+                    <p class="text-xs text-gray-400 mt-2"><span class="text-accent font-medium">[${type}]</span> Managed system workflow task flagged clear.</p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-white/5 text-[10px] text-gray-500">
+                    Filed by: ${author}
+                </div>
+            `;
+
+            container.prepend(archivedCard);
+            
+            // Remove from active viewport feed seamlessly
+            reportNode.remove();
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>
