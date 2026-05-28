@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCIS Reports | Unified Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --midnight-black: #05070a;
+            --deep-navy: #0f172a;
+            --accent-blue: #38bdf8;
+            --glass-white: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            background-color: var(--midnight-black);
+            color: #ffffff;
+        }
+
+        .bg-midnight { background-color: var(--midnight-black); }
+        .bg-navy { background-color: var(--deep-navy); }
+        .text-accent { color: var(--accent-blue); }
+        .border-glass { border-color: rgba(255, 255, 255, 0.1); }
+
+        .section { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Report Item Styling for Dark Theme */
+        .report-item {
+            padding: 1.2rem;
+            background: var(--deep-navy);
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 5px solid var(--accent-blue);
+            transition: all 0.3s ease;
+        }
+        .report-item.priority-urgent { border-left-color: #ef4444; background: rgba(239, 68, 68, 0.05); }
+        .badge { font-size: 0.7rem; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; font-weight: 800; color: #0f172a; background: var(--accent-blue); }
+        .badge.urgent { background: #ef4444; color: white; }
+    </style>
+</head>
+<body class="font-sans">
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 flex items-center justify-between bg-navy px-6 py-4 border-b border-glass">
+        <div class="flex items-center gap-4">
+            <!-- Unified Logo Icon Image -->
+            <div class="bg-white p-1 rounded-md flex items-center justify-center shadow-md">
+                <img src="https://uploads.onecompiler.io/44p52pkes/44qka53qd/IMG_0040.png" alt="FCIS Logo" class="h-8 w-auto mix-blend-multiply object-contain">
+            </div>
+            <div class="text-xl font-bold tracking-tight text-white">
+                FCIS<span class="text-accent">Reports</span>
+            </div>
+        </div>
+
+        <div class="flex gap-6">
+            <button onclick="nav('home')" class="nav-btn text-sm font-medium hover:text-accent transition-colors text-accent font-semibold">Submit Report</button>
+            <button onclick="nav('completed')" class="nav-btn text-sm font-medium hover:text-accent transition-colors">Completed Reports</button>
+            <button onclick="nav('about')" class="nav-btn text-sm font-medium hover:text-accent transition-colors">About Portal</button>
+            <button class="bg-accent-blue text-navy px-6 py-2 rounded-full text-sm font-bold hover:brightness-110 transition-all">
+                Staff Login
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Hosted Logo Image as Background Watermark -->
+    <section class="relative w-full h-80 flex items-center justify-center bg-midnight border-b border-glass overflow-hidden">
+        <div 
+            class="absolute inset-0 opacity-15 bg-center bg-no-repeat"
+            style="background-image: url('https://uploads.onecompiler.io/44p52pkes/44qka53qd/IMG_0040.png'); background-size: contain;"
+        ></div>
+        
+        <div class="relative z-10 text-center px-4">
+            <h1 class="text-5xl font-extrabold text-white mb-4 tracking-tight">Campus <span class="text-accent">Guardian</span></h1>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">The central nervous system for Forest City International School safety and facility management.</p>
+        </div>
+    </section>
+
+    <main class="max-w-7xl mx-auto px-6 py-10">
+        
+        <!-- SECTION: SUBMIT REPORT -->
+        <section id="home" class="section active">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                <!-- Form -->
+                <div class="bg-navy p-8 rounded-2xl border border-glass shadow-2xl">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center gap-3"><i data-lucide="send" class="text-accent"></i> File a Report</h2>
+                    <form id="reportForm" class="space-y-5">
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-widest">Incident Category</label>
+                            <select id="type" class="w-full bg-midnight border border-glass rounded-lg p-3 mt-2 outline-none focus:border-accent text-white">
+                                <option>Maintenance</option>
+                                <option>Security</option>
+                                <option>IT Support</option>
+                                <option>Health & Safety</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-widest">Priority</label>
+                            <select id="priority" class="w-full bg-midnight border border-glass rounded-lg p-3 mt-2 outline-none focus:border-accent text-white">
+                                <option>Normal</option>
+                                <option>Urgent</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-widest">Location</label>
+                            <input type="text" id="loc" placeholder="e.g., Block B, Floor 2" class="w-full bg-midnight border border-glass rounded-lg p-3 mt-2 outline-none focus:border-accent text-white" required>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-widest">Description</label>
+                            <textarea id="desc" rows="3" placeholder="Describe the issue..." class="w-full bg-midnight border border-glass rounded-lg p-3 mt-2 outline-none focus:border-accent text-white" required></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-accent text-navy py-4 rounded-xl font-black uppercase tracking-tighter hover:scale-[1.02] transition-transform">Dispatch Report</button>
+                    </form>
+                </div>
+
+                <!-- Feed -->
+                <div class="lg:col-span-2">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center gap-3"><i data-lucide="activity" class="text-accent"></i> Live Campus Feed</h2>
+                    <div id="feed" class="space-y-4 max-h-[600px] overflow-y-auto pr-4 custom-scrollbar">
+                        <!-- Placeholder -->
+                        <div class="report-item">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="badge">System</span>
+                                <span class="text-xs text-gray-500">Live Status</span>
+                            </div>
+                            <h4 class="font-bold text-lg">System Active</h4>
+                            <p class="text-gray-400 text-sm">Reports submitted via the portal will appear here in real-time for faculty review.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: COMPLETED REPORTS -->
+        <section id="completed" class="section">
+            <h2 class="text-3xl font-bold mb-8">Completed <span class="text-accent">Archive</span></h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Example Archived Item -->
+                <div class="bg-navy p-6 rounded-xl border border-glass opacity-60">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-[10px] font-bold text-green-400 uppercase border border-green-400 px-2 py-1 rounded">Resolved</span>
+                        <small class="text-gray-500">May 12, 2026</small>
+                    </div>
+                    <h4 class="font-bold">A/C Repair - Library</h4>
+                    <p class="text-xs text-gray-400 mt-2">Unit serviced and refrigerant refilled. Completed by Campus Ops.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: ABOUT -->
+        <section id="about" class="section text-center max-w-3xl mx-auto py-10">
+            <i data-lucide="shield-check" class="w-16 h-16 text-accent mx-auto mb-6"></i>
+            <h2 class="text-4xl font-black mb-4">Official Safety Protocol</h2>
+            <p class="text-gray-400 leading-relaxed">This portal is the official reporting tool for Forest City International School. It ensures that every maintenance request, safety concern, and facility issue is logged, prioritized, and resolved with transparency.</p>
+        </section>
+
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // Nav Logic
+        function nav(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('text-accent', 'font-semibold'));
+            
+            document.getElementById(id).classList.add('active');
+            
+            // Highlight current button
+            const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(btn => btn.getAttribute('onclick').includes(id));
+            if(activeBtn) activeBtn.classList.add('text-accent', 'font-semibold');
+        }
+
+        // Report Submission Logic
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const type = document.getElementById('type').value;
+            const priority = document.getElementById('priority').value;
+            const loc = document.getElementById('loc').value;
+            const desc = document.getElementById('desc').value;
+            const feed = document.getElementById('feed');
+
+            const item = document.createElement('div');
+            item.className = `report-item ${priority === 'Urgent' ? 'priority-urgent' : ''}`;
+            
+            item.innerHTML = `
+                <div class="flex justify-between items-center mb-3">
+                    <span class="badge ${priority === 'Urgent' ? 'urgent' : ''}">${priority}</span>
+                    <span class="text-xs text-accent">Just Now</span>
+                </div>
+                <h4 class="font-bold text-lg">${loc}</h4>
+                <p class="text-gray-300 text-sm mt-1"><span class="text-accent font-bold">[${type}]</span> ${desc}</p>
+            `;
+
+            feed.prepend(item);
+            this.reset();
+        });
+    </script>
+</body>
+</html>
